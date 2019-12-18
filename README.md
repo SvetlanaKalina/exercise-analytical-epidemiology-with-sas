@@ -29,27 +29,155 @@ run;
 ```
 NA were found in BMI totchol glucose heartrate and cigsperday.
 
+3)plausibility
 
+in the previous line of code we saw that there are high values in sysbp diabp totchol glucose and heartRate;
 
-high values in sysbp diabp totchol glucose heartRate;
-
+Because of the way the data was collected (via questionnaires) it is possible that some participants have entered implausible data. For instance a systolic blood pressure above 180 is a not likely, since it would present a medical emergency.
+Values that are not likely, as well as previously found NAs will be deleted.
 This can be achieved with:
 
 ```
 data framingham_raw;
 set framingham_raw;
-*sysbp >180 is not likely;
 if sysbp >180 then delete;
-*diabp >120 ***;
 if diabp >120 then delete;
-*heartRate above 110 is not  likely;
 if heartRate >110 OR heartRate=. then delete;
 if cigsPerDay =. then delete;
-*totchol above 600 is not  likely;
 if totchol >600 OR totchol=. then delete;
-*fasted glucose >250 unlikely;
 if glucose >250 OR glucose=. then delete;
 if education =. then delete;
 if BPMeds =. then delete;
 run;
-``
+```
+4) manipulate variables 
+
+We transformed BMI into BMI categories, since these are often used in nutritional epidemiology this way and provide a better comparison.
+
+``` 
+data mydata.framingham;
+set framingham_raw;
+if BMI <18.5 then
+bmicat=1;
+if BMI GE 18.5 <25 then
+bmicat=2;
+if BMI GE 25 <30 then
+bmicat=3;
+if BMI >30 then
+bmicat=4;
+label bmicat='BMI-category';
+run;
+```
+add labels
+```
+proc format library=mydata;
+value bmicat 1='underweight' 2='normalweight' 3='overweight' 4='obese';
+run;
+```
+5) further exploration with boxplots and barplots
+
+code to visualize differences between people with and without TenYearCHD
+boxplots
+```
+proc sort data=mydata.framingham;
+by tenyearchd;
+proc boxplot data=mydata.framingham;
+plot age*tenyearchd;
+plot BMI*tenyearchd; 
+plot sysbp*tenyearchd; 
+plot diabp*tenyearchd;
+plot totchol*tenyearchd; 
+plot glucose*tenyearchd; 
+plot heartRate*tenyearchd; 
+plot cigsPerDay*tenyearchd;
+```
+barplots
+```
+proc sort data=mydata.framingham;
+by tenyearchd;
+proc boxplot data=mydata.framingham;
+plot age*tenyearchd;
+plot BMI*tenyearchd; 
+plot sysbp*tenyearchd; 
+plot diabp*tenyearchd;
+plot totchol*tenyearchd; 
+plot glucose*tenyearchd; 
+plot heartRate*tenyearchd; 
+plot cigsPerDay*tenyearchd;
+```
+Example Barplot for Hypertension and Tenyear CHD
+![alt text](https://github.com/SvetlanaKalina/exercise-analytical-epidemiology-with-sas/blob/master/barplot-hypertension-tenyearCHD.png)
+
+We see that people who have hypertension tend to develope a ten year CHD more often than people without it.
+
+6)Regression analysis
+
+Our question was: What is the relationship between weight and the chance of developing a CHD after 10 years?
+
+To answer this question we built a logistic regression model with forward selection of (confounding)variables;
+```
+proc logistic data=mydata.framingham;
+class tenyearchd (ref='0') bmicat (ref='2')/param=ref;
+model tenyearchd=bmicat;
+run;
+
+```
+more variables were added if the p-values were significant and the addition did not increase AIC.
+
+The final model turned out to be:
+
+```
+proc logistic data=mydata.framingham;
+class tenyearchd (ref='0') bmicat (ref='2') male(ref='0') currentsmoker (ref='0') prevalentstroke (ref='0') diabetes (ref='0')/param=ref;
+model tenyearchd=bmicat male age currentsmoker sysbp cigsPerDay totchol prevalentstroke glucose diabetes;
+run;
+```
+
+7) Collinearity
+
+"Collinearity, in statistics, correlation between predictor variables (or independent variables), such that they express a linear relationship in a regression model. When predictor variables in the same regression model are correlated, they cannot independently predict the value of the dependent variable. In other words, they explain some of the same variance in the dependent variable, which in turn reduces their statistical significance."[1]
+
+If the variables show a high degree of correlation, one of them should be excluded. Naturally currentsmoker and cigsPerDay correlate, therefore we excluded cigsperday.
+
+8)Effectmodification
+
+"Effect Modification. Effect modification occurs when the magnitude of the effect of the primary exposure on an outcome (i.e., the association) differs depending on the level of a third variable. In this situation, computing an overall estimate of association is misleading." [2]
+
+9)Significant differences between groups
+
+In research differences between groups can result in misleading information. Sometimes the data needs to be stratified to avoid this. 
+
+```
+proc freq data=mydata.framingham;
+tables tenyearchd*male/chisq exact;
+run;
+*p<.0001;
+
+proc freq data=mydata.framingham;
+tables tenyearchd*bmicat/chisq exact;
+run;
+*p=.0002;
+
+proc freq data=mydata.framingham;
+tables tenyearchd*prevalentstroke/chisq exact;
+run;
+*p<.0001;
+```
+
+In our case we did find significant differences in the data, which would need to be addressed appropriately.
+
+10) Final results
+
+```
+              OR			95% CI
+bmicat 1 vs 2	2.348	1.140	4.837
+bmicat 3 vs 2	1.149	0.919	1.437
+bmicat 4 vs 2	1.102	0.793	1.530
+``` 
+
+---> Being underweight is associated with developing a CHD after 10 years and increases the odds 2,3fold;
+
+
+References
+[1] https://www.britannica.com/topic/collinearity-statistics
+[2] http://sphweb.bumc.bu.edu/otlt/MPH-Modules/BS/BS704_Multivariable/BS704_Multivariable4.html
