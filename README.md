@@ -10,13 +10,13 @@ Steps included:
 * regression analysis
 
 1) Import data:
-the dataset is provided in the Framingham.xlsx file. 
+The dataset is provided in the Framingham.xlsx file. 
 
-2) data exploration:
+2) Data exploration:
 
-categorical variables:
+Categorical variables:
  ```
- proc freq data=framingham_raw;
+proc freq data=framingham_raw;
 tables male currentsmoker education BPMeds prevalentstroke prevalenthyp tenyearchd diabetes;
 run;
 ```
@@ -27,54 +27,26 @@ histogram;
 var age BMI sysbp diabp totchol glucose heartRate cigsPerDay;
 run;
 ```
-NA were found in BMI totchol glucose heartrate and cigsperday.
 
-3)plausibility
+![alt text](https://github.com/SvetlanaKalina/exercise-analytical-epidemiology-with-sas/blob/master/histogramms-univariate.jpg)
 
-in the previous line of code we saw that there are high values in sysbp diabp totchol glucose and heartRate;
+NA were found in BMI totchol glucose heartrate and cigsperday, as well as some unusually high values.
+
+3) Plausibility check
+
+In the previous section we saw that there are high values in sysbp diabp totchol glucose and heartRate;
 
 Because of the way the data was collected (via questionnaires) it is possible that some participants have entered implausible data. For instance a systolic blood pressure above 180 is a not likely, since it would present a medical emergency.
 Values that are not likely, as well as previously found NAs will be deleted.
 This can be achieved with:
 
-```
-data framingham_raw;
-set framingham_raw;
-if sysbp >180 then delete;
-if diabp >120 then delete;
-if heartRate >110 OR heartRate=. then delete;
-if cigsPerDay =. then delete;
-if totchol >600 OR totchol=. then delete;
-if glucose >250 OR glucose=. then delete;
-if education =. then delete;
-if BPMeds =. then delete;
-run;
-```
-4) manipulate variables 
+4) Manipulate variables 
 
-We transformed BMI into BMI categories, since these are often used in nutritional epidemiology this way and provide a better comparison.
+We transformed BMI into BMI categories, since these are often used in this way in nutritional epidemiology  and provide a better comparison when making assumputions.
 
-``` 
-data mydata.framingham;
-set framingham_raw;
-if BMI <18.5 then
-bmicat=1;
-if BMI GE 18.5 <25 then
-bmicat=2;
-if BMI GE 25 <30 then
-bmicat=3;
-if BMI >30 then
-bmicat=4;
-label bmicat='BMI-category';
-run;
-```
-add labels
-```
-proc format library=mydata;
-value bmicat 1='underweight' 2='normalweight' 3='overweight' 4='obese';
-run;
-```
-5) further exploration with boxplots and barplots
+1='underweight' 2='normalweight' 3='overweight' 4='obese';
+
+5) Further exploration 
 
 code to visualize differences between people with and without TenYearCHD
 boxplots
@@ -110,7 +82,7 @@ Example Barplot for Hypertension and Tenyear CHD
 
 We see that people who have hypertension tend to develope a ten year CHD more often than people without it.
 
-6)Regression analysis
+6) Regression analysis
 
 Our question was: What is the relationship between weight and the chance of developing a CHD after 10 years?
 
