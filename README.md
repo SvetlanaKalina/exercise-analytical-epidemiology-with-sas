@@ -63,6 +63,9 @@ plot glucose*tenyearchd;
 plot heartRate*tenyearchd; 
 plot cigsPerDay*tenyearchd;
 ```
+![alt text](https://github.com/SvetlanaKalina/exercise-analytical-epidemiology-with-sas/blob/master/boxplots.png)
+
+
 barplots
 ```
 proc sort data=mydata.framingham;
@@ -77,8 +80,7 @@ plot glucose*tenyearchd;
 plot heartRate*tenyearchd; 
 plot cigsPerDay*tenyearchd;
 ```
-Example Barplot for Hypertension and Tenyear CHD
-![alt text](https://github.com/SvetlanaKalina/exercise-analytical-epidemiology-with-sas/blob/master/barplot-hypertension-tenyearCHD.png)
+![alt text](https://github.com/SvetlanaKalina/exercise-analytical-epidemiology-with-sas/blob/master/barplot.png)
 
 We see that people who have hypertension tend to develope a ten year CHD more often than people without it.
 
