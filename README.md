@@ -4,10 +4,10 @@ This code provides a logistic regression analysis with data from the Framingham 
 
 ********************************************************
 
-* Import data:
+## Import data:
 The dataset is provided in the Framingham.xlsx file. 
 
-* Data exploration:
+## Data exploration:
 
 Categorical variables:
  ```
@@ -26,7 +26,7 @@ run;
 
 NA were found in BMI totchol glucose heartrate and cigsperday, as well as some unusually high values.
 
-* Plausibility check
+## Plausibility check
 
 In the previous section we saw that there are high values in sysbp diabp totchol glucose and heartRate;
 
@@ -34,13 +34,13 @@ Because of the way the data was collected (via questionnaires) it is possible th
 Values that are not likely, as well as previously found NAs will be deleted.
 This can be achieved with:
 
-* Manipulate variables 
+## Manipulate variables 
 
 We transformed BMI into BMI categories, since these provide a better comparison when making assumputions.
 
 1='underweight' 2='normal weight' 3='overweight' 4='obese';
 
-* Further exploration 
+## Further exploration 
 
 Boxplots
 
@@ -54,7 +54,7 @@ Barplots
 
 We see that the variables display differences in the study population when it comes to ten year CHD. People with a ten year CHD tend to be less educated (more people in 1 and 2), more likely to be smokers, have had a stroke, have hypertension, diabetes and be overweight more often.
 
-* Regression analysis
+## Regression analysis
 
 Our question was: What is the relationship between weight and the chance of developing a CHD after 10 years?
 
@@ -77,17 +77,17 @@ model tenyearchd=bmicat male age currentsmoker sysbp cigsPerDay totchol prevalen
 run;
 ```
 
-* Collinearity
+## Collinearity
 
 "Collinearity, in statistics, correlation between predictor variables (or independent variables), such that they express a linear relationship in a regression model. When predictor variables in the same regression model are correlated, they cannot independently predict the value of the dependent variable. In other words, they explain some of the same variance in the dependent variable, which in turn reduces their statistical significance."[1]
 
 If the variables show a high degree of correlation, one of them should be excluded. Naturally currentsmoker and cigsPerDay correlate, therefore we excluded cigsperday.
 
-* Effectmodification
+## Effectmodification
 
 "Effect Modification. Effect modification occurs when the magnitude of the effect of the primary exposure on an outcome (i.e., the association) differs depending on the level of a third variable. In this situation, computing an overall estimate of association is misleading." [2]
 
-* Significant differences between groups
+## Significant differences between groups
 
 In research differences between groups can result in misleading information. Sometimes the data needs to be stratified to avoid this. 
 
@@ -110,7 +110,7 @@ run;
 
 In our case, we did find significant differences in the data, which would need to be addressed appropriately in the characteristics table.
 
-* Final results
+## Final results
 
 ```
 		OR	95% CI
@@ -120,7 +120,7 @@ bmicat 4 vs 2 	1.135 	0.815 	1.579
 
 ``` 
 
-=> Being underweight is associated with developing a CHD after 10 years and increases the odds by 50%;
+#### According to the present data, being underweight is associated with developing a CHD after 10 years and increases the odds by 50%;
 
 
 References
