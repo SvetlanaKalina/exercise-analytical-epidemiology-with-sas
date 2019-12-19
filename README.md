@@ -2,15 +2,8 @@
 
 This code provides a logistic regression analysis with data from the Framingham data (sub)set. To answer: What is the relationship between weight and the chance of developing a coronary heart disease (CHD) after 10 years?
 
-
-Steps included:
-* import data
-* data exploration
-* plausibility check
-* data manipulation
-* regression analysis
-
 ********************************************************
+
 * Import data:
 The dataset is provided in the Framingham.xlsx file. 
 
