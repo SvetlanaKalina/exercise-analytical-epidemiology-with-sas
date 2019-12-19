@@ -1,6 +1,7 @@
 # Exercise-Analytical-Epidemiology-with-SAS
 
-This code provides a logistic regression analysis with data from the framingham data (sub)set.
+This code provides a logistic regression analysis with data from the Framingham data (sub)set. To answer: What is the relationship between weight and the chance of developing a coronary heart disease (CHD) after 10 years?
+
 
 Steps included:
 * import data
@@ -41,15 +42,17 @@ This can be achieved with:
 
 4) Manipulate variables 
 
-We transformed BMI into BMI categories, since these are often used in this way in nutritional epidemiology  and provide a better comparison when making assumputions.
+We transformed BMI into BMI categories, since these provide a better comparison when making assumputions.
 
-1='underweight' 2='normalweight' 3='overweight' 4='obese';
+1='underweight' 2='normal weight' 3='overweight' 4='obese';
 
 5) Further exploration 
 
 Boxplots
 
 ![alt text](https://github.com/SvetlanaKalina/exercise-analytical-epidemiology-with-sas/blob/master/boxplots.png)
+
+We see that the variables display differences in the study population when it comes to ten year CHD. People with a ten year CHD tend to have a higher BMI, heart rate, systolic and diastolic blood pressure, as well as total cholesterol and be older.
 
 Barplots 
 
@@ -86,7 +89,7 @@ run;
 
 If the variables show a high degree of correlation, one of them should be excluded. Naturally currentsmoker and cigsPerDay correlate, therefore we excluded cigsperday.
 
-8)Effectmodification
+8) Effectmodification
 
 "Effect Modification. Effect modification occurs when the magnitude of the effect of the primary exposure on an outcome (i.e., the association) differs depending on the level of a third variable. In this situation, computing an overall estimate of association is misleading." [2]
 
@@ -116,13 +119,14 @@ In our case, we did find significant differences in the data, which would need t
 10) Final results
 
 ```
-              OR			95% CI
-bmicat 1 vs 2	2.348	1.140	4.837
-bmicat 3 vs 2	1.149	0.919	1.437
-bmicat 4 vs 2	1.102	0.793	1.530
+			             	OR			95% CI
+bmicat 1 vs 2 	1.556 	0.625 	3.870
+bmicat 3 vs 2 	1.139 	0.908 	1.428
+bmicat 4 vs 2 	1.135 	0.815 	1.579
+
 ``` 
 
----> Being underweight is associated with developing a CHD after 10 years and increases the odds 2,3fold;
+---> Being underweight is associated with developing a CHD after 10 years and increases the odds by 50%;
 
 
 References
