@@ -15,7 +15,7 @@ proc freq data=framingham_raw;
 tables male currentsmoker education BPMeds prevalentstroke prevalenthyp tenyearchd diabetes;
 run;
 ```
-In this we can see that there are quite a few NAs in education and BPmeds, which we will take care of later.
+In this we can see that there are quite a few NAs in education and BPmeds, which we will take care of later. 
 ```
 proc univariate data=framingham_raw;
 histogram;
